@@ -7,6 +7,15 @@ Instancia configuração, sessão Spark, I/O, lógica de negócio e pipeline con
 from __future__ import annotations
 
 import logging
+import sys
+from pathlib import Path
+
+# Ambientes como AWS Cloud9 / Academy costumam rodar ``python main.py`` sem ``pip install -e .``.
+# O pacote vive em ``src/relatorio_pedidos``; incluir ``src`` no path equivale ao que faria um install.
+_REPO_ROOT = Path(__file__).resolve().parent
+_SRC = _REPO_ROOT / "src"
+if _SRC.is_dir() and str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 
 from relatorio_pedidos.config.settings import Settings
 from relatorio_pedidos.io_utils.data_handler import DataHandler

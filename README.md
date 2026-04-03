@@ -63,7 +63,9 @@ Sobrescrevem entradas do YAML:
 | `RELATORIO_OUTPUT_PATH` | Pasta de saída Parquet |
 | `PARQUET_WRITE_MODE` | Modo de escrita (`overwrite`, `append`, …) |
 
-**Desenvolvimento:** instale o pacote em modo editável (`pip install -e .`) e execute `python main.py` a partir da raiz do repo, **ou** defina `RELATORIO_PROJECT_ROOT` apontando para essa raiz. Os imports usam o pacote `relatorio_pedidos` (não `src.relatorio_pedidos`).
+**Desenvolvimento / AWS Academy:** o `main.py` coloca automaticamente a pasta `src/` no `sys.path` antes dos imports, então **`python main.py` funciona sem `pip install`**. Opcionalmente: `pip install -e .` (imports continuam como `relatorio_pedidos`, não use `src.relatorio_pedidos` — o código do pacote fica em `src/relatorio_pedidos/`, mas o **nome do módulo** é `relatorio_pedidos`).
+
+Defina `RELATORIO_PROJECT_ROOT` se o CWD não for a raiz do repositório.
 
 ## Cluster em containers (Docker / Spark standalone)
 
