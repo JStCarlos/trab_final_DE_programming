@@ -1,0 +1,6 @@
+graft src
+graft config
+include README.md
+include main.py
+include pyproject.toml
+include requirements.txt

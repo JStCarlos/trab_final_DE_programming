@@ -1,0 +1,19 @@
+# Configuração central (agnóstica de plataforma). Sobrescreva com variáveis de ambiente quando necessário.
+spark:
+  app_name: "relatorio-pedidos-fiap"
+  master: "local[*]"
+
+paths:
+  pedidos: "data/datasets-csv-pedidos-main/data/pedidos"
+  pagamentos: "data/dataset-json-pagamentos-main/data/pagamentos"
+  output: "output/relatorio_pedidos"
+
+file_options:
+  pedidos_csv:
+    compression: "gzip"
+    header: true
+    sep: ";"
+
+parquet:
+  write_mode: "overwrite"
+  compression: "snappy"
