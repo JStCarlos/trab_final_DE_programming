@@ -54,12 +54,16 @@ Sobrescrevem entradas do YAML:
 
 | Variável | Descrição |
 |----------|-----------|
+| `RELATORIO_PROJECT_ROOT` | Raiz do repositório (pasta que contém `config/` e `src/`). Use se o processo não estiver com *working directory* na raiz (alguns IDEs ou `spark-submit` de outra pasta). Equivale a `PROJECT_ROOT`. |
+| `RELATORIO_SETTINGS_YAML` | Caminho absoluto ou relativo à raiz para outro arquivo de configuração YAML. |
 | `SPARK_MASTER` | Master do Spark (`local[*]`, `spark://...`, `yarn`, etc.) |
 | `SPARK_APP_NAME` | Nome da aplicação no cluster |
-| `PEDIDOS_INPUT_PATH` | Diretório ou glob de arquivos de pedidos |
+| `PEDIDOS_INPUT_PATH` | Diretório ou glob de arquivos de pedidos (absoluto ou relativo à raiz do projeto) |
 | `PAGAMENTOS_INPUT_PATH` | Diretório de JSON de pagamentos |
 | `RELATORIO_OUTPUT_PATH` | Pasta de saída Parquet |
 | `PARQUET_WRITE_MODE` | Modo de escrita (`overwrite`, `append`, …) |
+
+**Desenvolvimento:** instale o pacote em modo editável (`pip install -e .`) e execute `python main.py` a partir da raiz do repo, **ou** defina `RELATORIO_PROJECT_ROOT` apontando para essa raiz. Os imports usam o pacote `relatorio_pedidos` (não `src.relatorio_pedidos`).
 
 ## Cluster em containers (Docker / Spark standalone)
 

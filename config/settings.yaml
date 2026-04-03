@@ -1,4 +1,5 @@
-# Configuração central (agnóstica de plataforma). Sobrescreva com variáveis de ambiente quando necessário.
+# Configuração central (caminhos relativos à raiz do repositório).
+# Sobrescreva com variáveis de ambiente ou use RELATORIO_PROJECT_ROOT se o CWD não for a raiz.
 spark:
   app_name: "relatorio-pedidos-fiap"
   master: "local[*]"

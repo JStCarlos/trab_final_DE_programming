@@ -10,7 +10,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType
 from pyspark.sql.utils import AnalysisException
 
-from src.relatorio_pedidos.io_utils.schemas import PAGAMENTOS_SCHEMA, PEDIDOS_SCHEMA
+from relatorio_pedidos.io_utils.schemas import PAGAMENTOS_SCHEMA, PEDIDOS_SCHEMA
 
 logger = logging.getLogger(__name__)
 

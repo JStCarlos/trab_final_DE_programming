@@ -11,21 +11,39 @@ import yaml
 
 
 def _project_root() -> Path:
-    """Raiz do repositório (pai de ``src``)."""
+    """
+    Raiz do repositório (pai de ``src``).
+
+    Pode ser fixada por ``RELATORIO_PROJECT_ROOT`` ou ``PROJECT_ROOT`` quando o
+    processo não roda com CWD na raiz (IDE, spark-submit a partir de outra pasta).
+    """
+    for key in ("RELATORIO_PROJECT_ROOT", "PROJECT_ROOT"):
+        raw = os.environ.get(key)
+        if raw:
+            return Path(raw).expanduser().resolve()
     return Path(__file__).resolve().parents[3]
 
 
 def carregar_config(path: str | Path | None = None) -> dict[str, Any]:
-    """Carrega o arquivo YAML de configuração (padrão: ``config/settings.yaml`` na raiz)."""
+    """Carrega YAML. Caminhos relativos são resolvidos a partir da raiz do projeto."""
     root = _project_root()
-    cfg_path = Path(path) if path is not None else root / "config" / "settings.yaml"
+    if path is None:
+        env_yaml = os.environ.get("RELATORIO_SETTINGS_YAML")
+        if env_yaml:
+            cfg_path = Path(env_yaml).expanduser()
+        else:
+            cfg_path = root / "config" / "settings.yaml"
+    else:
+        cfg_path = Path(path).expanduser()
+    if not cfg_path.is_absolute():
+        cfg_path = (root / cfg_path).resolve()
     with open(cfg_path, encoding="utf-8") as file:
         data: dict[str, Any] = yaml.safe_load(file)
         return data
 
 
 def _resolve_path(value: str, root: Path) -> Path:
-    p = Path(value)
+    p = Path(value).expanduser()
     return p if p.is_absolute() else (root / p).resolve()
 
 
