@@ -16,7 +16,7 @@ from relatorio_pedidos.processing.transformations import Transformation
 from relatorio_pedidos.session.spark_session import SparkSessionManager
 
 
-def configurar_logging() -> None:
+def setup_logging() -> None:
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -62,5 +62,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    configurar_logging()
+    setup_logging()
     main()
