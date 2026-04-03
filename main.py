@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import logging
 
-from relatorio_pedidos.config.settings import Settings
-from relatorio_pedidos.io_utils.data_handler import DataHandler
-from relatorio_pedidos.pipeline.pipeline import Pipeline
-from relatorio_pedidos.processing.transformations import Transformation
-from relatorio_pedidos.session.spark_session import SparkSessionManager
+from src.relatorio_pedidos.config.settings import Settings
+from src.relatorio_pedidos.io_utils.data_handler import DataHandler
+from src.relatorio_pedidos.pipeline.pipeline import Pipeline
+from src.relatorio_pedidos.processing.transformations import Transformation
+from src.relatorio_pedidos.session.spark_session import SparkSessionManager
 
 
 def configurar_logging() -> None:

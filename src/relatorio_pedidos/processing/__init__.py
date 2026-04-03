@@ -1,3 +1,3 @@
-from relatorio_pedidos.processing.transformations import Transformation
+from src.relatorio_pedidos.processing.transformations import Transformation
 
 __all__ = ["Transformation"]
