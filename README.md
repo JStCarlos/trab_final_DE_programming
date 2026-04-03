@@ -2,7 +2,7 @@
 
 Pipeline PySpark que gera relatório de **pedidos de 2025** com **pagamento recusado** (`status = false`) e **avaliação de fraude legítima** (`avaliacao_fraude.fraude = false`), com join nos dados de pedidos para obter **UF**, **valor total** (soma de `valor_unitario * quantidade`) e **data do pedido**. Saída em **Parquet**, ordenada por **UF**, **forma de pagamento** e **data do pedido**.
 
-A organização de pacotes segue o modelo do repositório de aulas [pyspark-poo](https://github.com/infobarbosa/pyspark-poo): `config` + `settings.yaml`, `session`, `io_utils` (`DataHandler`), `processing` (`Transformation`) e `pipeline` (`Pipeline`).
+A organização de pacotes separa `config` + `settings.yaml`, `session`, `io_utils` (`DataHandler`), `processing` (`Transformation`) e `pipeline` (`Pipeline`).
 
 ## Pré-requisitos
 
@@ -15,16 +15,13 @@ Edite **`config/settings.yaml`** na raiz do repositório para apontar caminhos, 
 
 ## Estrutura esperada dos dados
 
-Coloque os datasets conforme os repositórios oficiais do professor:
-
 - **Pedidos** (CSV gzip, `;`, com header):  
-  `data/datasets-csv-pedidos-main/data/pedidos/`  
-  (equivalente a `datasets-csv-pedidos/data/pedidos/` no repositório original)
+  `data/datasets-csv-pedidos-main/data/pedidos/`
 
 - **Pagamentos** (JSON gzip, `pagamentos-YYYY-MM-DD.json.gz`):  
   `data/dataset-json-pagamentos-main/data/pagamentos/`
 
-Os leiautes estão nos `README.md` dentro de cada pasta em `data/`.
+Os leiautes estão nos `README.md` dentro de cada pasta em `data/`. Guia passo a passo (VM, instalação e execução): `data/datasets-csv-pedidos-main/README.md`.
 
 ## Instalação
 
@@ -46,7 +43,7 @@ Com o ambiente virtual ativo, na **raiz** do projeto (para que `config/settings.
 python main.py
 ```
 
-O relatório será escrito no caminho definido em `paths.output` (padrão `output/relatorio_pedidos/`), em modo **overwrite** por padrão.
+O relatório é gravado sob a pasta base em `paths.output` (padrão `output/relatorio_pedidos`), em uma **subpasta por execução** no formato `AAAAMMDD_HHMMSS`, em modo **overwrite** por padrão. Ao final, o pipeline **relê** esse Parquet e exibe as **20 primeiras linhas** na saída do Spark.
 
 ### Variáveis de ambiente (opcional)
 
@@ -60,7 +57,7 @@ Sobrescrevem entradas do YAML:
 | `SPARK_APP_NAME` | Nome da aplicação no cluster |
 | `PEDIDOS_INPUT_PATH` | Diretório ou glob de arquivos de pedidos (absoluto ou relativo à raiz do projeto) |
 | `PAGAMENTOS_INPUT_PATH` | Diretório de JSON de pagamentos |
-| `RELATORIO_OUTPUT_PATH` | Pasta de saída Parquet |
+| `RELATORIO_OUTPUT_PATH` | Pasta **base** de saída; cada run cria `.../AAAAMMDD_HHMMSS/` dentro dela |
 | `PARQUET_WRITE_MODE` | Modo de escrita (`overwrite`, `append`, …) |
 
 **Desenvolvimento / AWS Academy:** o `main.py` coloca automaticamente a pasta `src/` no `sys.path` antes dos imports, então **`python main.py` funciona sem `pip install`**. Opcionalmente: `pip install -e .` (imports continuam como `relatorio_pedidos`, não use `src.relatorio_pedidos` — o código do pacote fica em `src/relatorio_pedidos/`, mas o **nome do módulo** é `relatorio_pedidos`).
@@ -90,7 +87,7 @@ pytest
 - Unitário: mock de falha + verificação de `logger.exception` na `Transformation` (roda em qualquer SO).
 - O `conftest.py` define `PYSPARK_PYTHON` / `PYSPARK_DRIVER_PYTHON` para o mesmo `python` do venv.
 
-## Arquitetura (requisitos do trabalho + modelo das aulas)
+## Arquitetura (requisitos do trabalho)
 
 - **Schemas explícitos** na leitura (sem `inferSchema`) e **`RELATORIO_SCHEMA`** na saída (colunas finais com `cast` a partir dos tipos do `StructType`); `valor_unitario` como `DoubleType` nos pedidos.
 - **`main.py`** como aggregation root: instancia `Settings`, `SparkSessionManager`, `DataHandler`, `Transformation` e `Pipeline` (injeção por construtor).

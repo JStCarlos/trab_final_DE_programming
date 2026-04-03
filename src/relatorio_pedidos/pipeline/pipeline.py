@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime
+from pathlib import Path
 
 from relatorio_pedidos.config.settings import Settings
 from relatorio_pedidos.io_utils.data_handler import DataHandler
@@ -45,17 +47,25 @@ class Pipeline:
             relatorio_df.schema.simpleString(),
         )
 
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        run_output = Path(s.output_path) / stamp
+        run_output_str = str(run_output.resolve())
+
         logger.info(
             "Gravando Parquet em %s (mode=%s, compression=%s)",
-            s.output_path,
+            run_output_str,
             s.parquet_write_mode,
             s.parquet_compression,
         )
         self._data_handler.write_parquet(
             relatorio_df,
-            path=str(s.output_path),
+            path=run_output_str,
             mode=s.parquet_write_mode,
             compression=s.parquet_compression,
         )
+
+        logger.info("Lendo relatório gravado para validação e amostra (20 linhas)")
+        relatorio_lido = self._data_handler.read_parquet(run_output_str)
+        relatorio_lido.show(20, truncate=False)
 
         logger.info("Pipeline concluído com sucesso")

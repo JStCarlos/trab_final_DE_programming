@@ -1,33 +1,157 @@
-# Leiaute dos arquivos
+# Dataset de pedidos (CSV gzip)
 
-- **Separador**: ";"
-- **Header**: True
+## Leiaute dos arquivos
+
+- **Separador**: `;`
+- **Header**: sim
 - **Compressão**: gzip
 
-### `pedidos.csv.gz`
-| Atributo        | Tipo      | Obs                                               | 
-| ---             | ---       | ---                                               |
-| ID_PEDIDO       | UUID      | O identificador da pessoa                         | 
-| PRODUTO         | string    | O nome do produto no pedido                       | 
-| VALOR_UNITARIO  | float     | O valor unitário do produto no pedido             | 
-| QUANTIDADE      | long      | A quantidade do produto no pedido                 | 
-| DATA_CRIACAO    | date      | A data da criação do pedido                       | 
-| UF              | string    | A sigla da unidade federativa (estado) no Brasil  | 
-| ID_CLIENTE      | long      | O identificador do cliente                        | 
+### `pedidos*.csv.gz`
 
-### Sample
+| Atributo       | Tipo   | Descrição                                      |
+| -------------- | ------ | ---------------------------------------------- |
+| ID_PEDIDO      | UUID   | Identificador do pedido                        |
+| PRODUTO        | string | Nome do produto no pedido                      |
+| VALOR_UNITARIO | float  | Valor unitário do produto                      |
+| QUANTIDADE     | long   | Quantidade do produto no pedido                |
+| DATA_CRIACAO   | date   | Data/hora de criação do pedido                 |
+| UF             | string | Sigla da unidade federativa (estado)           |
+| ID_CLIENTE     | long   | Identificador do cliente                       |
+
+### Exemplo de linhas
+
+```
 id_pedido;produto;valor_unitario;quantidade;data_criacao;uf;id_cliente
+fdd7933e-ce3a-4475-b29d-f239f491a0e7;MONITOR;600;3;2024-01-01T22:26:32;RO;12414
+```
 
-fdd7933e-ce3a-4475-b29d-f239f491a0e7;MONITOR;600;3;2024-01-01T22:26:32;RO;12414<br>
-fe0f547a-69f3-4514-adee-8f4299f152af;MONITOR;600;2;2024-01-01T16:01:26;SP;11750<br>
-fe4f2b05-1150-43d8-b86a-606bd55bc72c;NOTEBOOK;1500;1;2024-01-01T06:49:21;RR;1195<br>
-fe8f5b08-160b-490b-bcb3-c86df6d2e53b;GELADEIRA;2000;1;2024-01-01T04:14:54;AC;8433<br>
-feaf3652-e1bd-4150-957e-ee6c3f62e11e;HOMETHEATER;500;2;2024-01-01T10:33:09;SP;12231<br>
-feb1efc5-9dd7-49a5-a9c7-626c2de3e029;CELULAR;1000;2;2024-01-01T13:48:39;SC;2340<br>
-ff181456-d587-4abd-a0ac-a8e6e33b87d5;TABLET;1100;1;2024-01-01T21:28:47;RS;12121<br>
-ff3bc5e0-c49a-46c5-a874-3eb6c8289fd1;HOMETHEATER;500;1;2024-01-01T22:31:35;SC;6907<br>
-ff4fcf5f-ca8a-4bc4-8d17-995ecaab3110;SOUNDBAR;900;3;2024-01-01T19:33:08;RJ;9773<br>
-ff703483-e564-4883-bdb5-0e25d8d9a006;NOTEBOOK;1500;3;2024-01-01T00:22:32;RN;2044<br>
-ffe4d6ad-3830-45af-a599-d09daaeb5f75;HOMETHEATER;500;3;2024-01-01T02:55:59;MS;3846<br>
+Os arquivos reais devem ficar em `data/pedidos/` **dentro deste repositório de dataset**, ou no projeto consumidor em `data/datasets-csv-pedidos-main/data/pedidos/`, conforme o `config/settings.yaml` do pipeline.
 
+---
 
+## Pipeline de relatório (projeto na pasta pai)
+
+Este CSV é consumido pelo projeto **trabalho final** (PySpark) que fica na raiz do repositório principal, **um nível acima** de `data/` (ex.: `trab_final_DE_programming/`). Abaixo: instalação em máquina virtual Linux (ex.: Ubuntu na AWS) e execução.
+
+### 1. Requisitos na máquina virtual
+
+| Componente | Observação |
+| ---------- | ---------- |
+| **Ubuntu** (ou outra distro Linux recente) | Ambiente comum em cloud / Academy |
+| **Java 11 ou 17** | Necessário para a JVM do Spark (`sudo apt install openjdk-17-jdk` ou equivalente) |
+| **Python 3.10+** | `python3 --version` |
+| **Git** | Para clonar o repositório do trabalho |
+
+Confira Java:
+
+```bash
+java -version
+```
+
+Confira Python:
+
+```bash
+python3 --version
+```
+
+### 2. Clonar o repositório do trabalho e entrar na pasta
+
+```bash
+cd ~/environment
+git clone <URL_DO_SEU_REPOSITORIO> trab_final_DE_programming
+cd trab_final_DE_programming
+```
+
+Substitua `<URL_DO_SEU_REPOSITORIO>` pela URL pública do GitHub do grupo.
+
+### 3. Dados de pedidos e pagamentos
+
+- **Pedidos**: arquivos `*.csv.gz` neste layout, no caminho esperado pelo projeto, por exemplo:  
+  `data/datasets-csv-pedidos-main/data/pedidos/`
+- **Pagamentos** (JSON gzip): em `data/dataset-json-pagamentos-main/data/pagamentos/`
+
+Se as pastas forem diferentes, ajuste `paths.pedidos` e `paths.pagamentos` em `config/settings.yaml` na raiz do projeto (caminhos relativos à raiz do repositório).
+
+### 4. Ambiente virtual Python e dependências
+
+```bash
+cd ~/environment/trab_final_DE_programming
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -e ".[dev]"
+```
+
+- `-e ".[dev]"` instala o pacote em modo editável e o **pytest** para testes.
+- Se preferir só executar o pipeline (sem dependência explícita do extras): `pip install -e .`
+
+### 5. Executar o pipeline
+
+Na **raiz** do repositório (`trab_final_DE_programming`), com o venv ativado:
+
+```bash
+source .venv/bin/activate
+cd ~/environment/trab_final_DE_programming
+python main.py
+```
+
+O `main.py` adiciona `src/` ao `sys.path`, então o comando acima funciona mesmo sem reinstalar o pacote a cada alteração.
+
+Se o terminal não estiver com *working directory* na raiz do projeto, defina a raiz explicitamente:
+
+```bash
+export RELATORIO_PROJECT_ROOT="$HOME/environment/trab_final_DE_programming"
+python "$RELATORIO_PROJECT_ROOT/main.py"
+```
+
+### 6. Onde fica o relatório Parquet
+
+- Pasta base configurada em `paths.output` (padrão: `output/relatorio_pedidos`).
+- **Cada execução** grava em uma subpasta com data e hora:  
+  `output/relatorio_pedidos/AAAAMMDD_HHMMSS/`  
+  (ex.: `output/relatorio_pedidos/20250403_143022/`).
+
+Ao final, o pipeline **lê de volta** esse Parquet e imprime as **20 primeiras linhas** no log (saída do Spark).
+
+### 7. Ler o resultado manualmente no PySpark
+
+Abra o shell Python do Spark (não cole Python direto no bash):
+
+```bash
+cd ~/environment/trab_final_DE_programming
+pyspark
+```
+
+No prompt Python:
+
+```python
+path = "output/relatorio_pedidos/20250403_143022"
+df = spark.read.parquet(path)
+df.printSchema()
+df.show(20, truncate=False)
+```
+
+Troque `path` pelo nome real da pasta criada na última execução.
+
+### 8. Testes automatizados
+
+```bash
+cd ~/environment/trab_final_DE_programming
+source .venv/bin/activate
+pytest -v
+```
+
+Em Linux costumam rodar todos os testes. Em Windows, parte da integração Spark pode ser ignorada (`skipped`).
+
+### 9. Variáveis de ambiente úteis (opcional)
+
+| Variável | Uso |
+| -------- | --- |
+| `RELATORIO_PROJECT_ROOT` | Raiz do repositório quando o CWD não é a raiz |
+| `RELATORIO_SETTINGS_YAML` | Caminho alternativo para o YAML de configuração |
+| `PEDIDOS_INPUT_PATH` | Sobrescreve pasta de pedidos |
+| `PAGAMENTOS_INPUT_PATH` | Sobrescreve pasta de pagamentos |
+| `RELATORIO_OUTPUT_PATH` | Sobrescreve pasta **base** de saída (o timestamp é sempre uma subpasta) |
+| `SPARK_MASTER` | Ex.: `local[*]` ou URL do cluster |
+
+Documentação adicional do projeto: `README.md` na raiz do repositório `trab_final_DE_programming`.

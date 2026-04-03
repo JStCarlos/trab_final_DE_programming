@@ -94,3 +94,15 @@ class DataHandler:
             .save(str(out))
         )
         logger.info("Escrita Parquet finalizada: %s", path)
+
+    def read_parquet(self, path: str) -> DataFrame:
+        try:
+            df = self.spark.read.parquet(path)
+            logger.info("Leitura Parquet concluída: %s", path)
+            return df
+        except AnalysisException as exc:
+            logger.error("Erro de leitura Spark (Parquet): %s", exc)
+            raise
+        except Py4JJavaError as exc:
+            logger.critical("Erro na JVM ao ler Parquet: %s", exc)
+            raise
