@@ -1,5 +1,3 @@
-"""Orquestração do pipeline (classe ``Pipeline`` das aulas)."""
-
 from __future__ import annotations
 
 import logging
@@ -12,8 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class Pipeline:
-    """Encapsula carga, transformação e gravação do relatório."""
-
     def __init__(
         self,
         data_handler: DataHandler,

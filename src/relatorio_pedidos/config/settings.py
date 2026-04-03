@@ -1,5 +1,3 @@
-"""Configurações centralizadas (YAML + overrides por variáveis de ambiente)."""
-
 from __future__ import annotations
 
 import os
@@ -11,12 +9,6 @@ import yaml
 
 
 def _project_root() -> Path:
-    """
-    Raiz do repositório (pai de ``src``).
-
-    Pode ser fixada por ``RELATORIO_PROJECT_ROOT`` ou ``PROJECT_ROOT`` quando o
-    processo não roda com CWD na raiz (IDE, spark-submit a partir de outra pasta).
-    """
     for key in ("RELATORIO_PROJECT_ROOT", "PROJECT_ROOT"):
         raw = os.environ.get(key)
         if raw:
@@ -25,7 +17,6 @@ def _project_root() -> Path:
 
 
 def carregar_config(path: str | Path | None = None) -> dict[str, Any]:
-    """Carrega YAML. Caminhos relativos são resolvidos a partir da raiz do projeto."""
     root = _project_root()
     if path is None:
         env_yaml = os.environ.get("RELATORIO_SETTINGS_YAML")
@@ -49,8 +40,6 @@ def _resolve_path(value: str, root: Path) -> Path:
 
 @dataclass(frozen=True)
 class Settings:
-    """Classe de configuração utilizada no fluxo principal (``main.py``)."""
-
     spark_app_name: str
     spark_master: str
     pedidos_path: Path

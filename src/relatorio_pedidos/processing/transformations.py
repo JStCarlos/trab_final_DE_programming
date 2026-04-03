@@ -1,5 +1,3 @@
-"""Lógica de negócio: transformações do relatório (classe ``Transformation`` das aulas)."""
-
 from __future__ import annotations
 
 import logging
@@ -18,11 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class Transformation:
-    """
-    Regras de negócio: pedidos de 2025 com pagamento recusado e fraude legítima,
-    com ordenação exigida pelo trabalho.
-    """
-
     def build_relatorio_pedidos(self, pedidos: DataFrame, pagamentos: DataFrame) -> DataFrame:
         try:
             logger.info(

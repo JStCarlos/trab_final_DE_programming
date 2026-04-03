@@ -1,17 +1,9 @@
-"""
-Aggregation root: composition root com injeção de dependências (critério do trabalho).
-
-Instancia configuração, sessão Spark, I/O, lógica de negócio e pipeline conforme as aulas.
-"""
-
 from __future__ import annotations
 
 import logging
 import sys
 from pathlib import Path
 
-# Ambientes como AWS Cloud9 / Academy costumam rodar ``python main.py`` sem ``pip install -e .``.
-# O pacote vive em ``src/relatorio_pedidos``; incluir ``src`` no path equivale ao que faria um install.
 _REPO_ROOT = Path(__file__).resolve().parent
 _SRC = _REPO_ROOT / "src"
 if _SRC.is_dir() and str(_SRC) not in sys.path:
@@ -25,7 +17,6 @@ from relatorio_pedidos.session.spark_session import SparkSessionManager
 
 
 def configurar_logging() -> None:
-    """Configura logging da aplicação (boas práticas do material do professor)."""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

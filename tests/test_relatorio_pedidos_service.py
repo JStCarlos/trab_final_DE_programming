@@ -1,5 +1,3 @@
-"""Testes de integração Spark da ``Transformation`` (Linux / AWS Academy)."""
-
 from __future__ import annotations
 
 import sys
@@ -15,8 +13,6 @@ from relatorio_pedidos.io_utils.schemas import (
 )
 from relatorio_pedidos.processing.transformations import Transformation
 
-# Em Linux (ex.: AWS Academy) a suíte roda por completo. No Windows, agregações
-# locais com PySpark costumam falhar no worker; use WSL ou ignore os skips.
 pytestmark = pytest.mark.skipif(
     sys.platform == "win32",
     reason="Integração Spark local instável no Windows; execute pytest em Linux (AWS Academy).",

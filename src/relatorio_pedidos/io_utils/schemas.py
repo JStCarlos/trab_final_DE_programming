@@ -1,5 +1,3 @@
-"""Schemas explícitos compartilhados (leitura e testes)."""
-
 from pyspark.sql.types import (
     BooleanType,
     DoubleType,

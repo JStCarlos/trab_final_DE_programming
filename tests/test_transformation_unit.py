@@ -1,5 +1,3 @@
-"""Testes unitários da ``Transformation`` sem executar shuffle no cluster local."""
-
 from __future__ import annotations
 
 import os
@@ -14,7 +12,6 @@ from relatorio_pedidos.processing.transformations import Transformation
 
 @pytest.fixture
 def spark_context_only() -> SparkSession:
-    """Sessão mínima: ``F.col`` exige SparkContext ativo (avaliação dos argumentos de ``withColumn``)."""
     if sys.platform == "win32":
         os.environ.setdefault("PYSPARK_PYTHON", sys.executable)
         os.environ.setdefault("PYSPARK_DRIVER_PYTHON", sys.executable)
@@ -32,7 +29,6 @@ def spark_context_only() -> SparkSession:
 def test_transformation_registra_excecao_ao_falhar_na_transformacao(
     spark_context_only: SparkSession,
 ) -> None:
-    """Garante try/except + logging.exception na lógica de negócio (critério do trabalho)."""
     _ = spark_context_only
 
     pedidos = MagicMock()

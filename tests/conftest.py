@@ -1,5 +1,3 @@
-"""Ambiente pytest: interpretador PySpark (útil em venv, Cloud9, AWS Academy)."""
-
 from __future__ import annotations
 
 import os

@@ -1,5 +1,3 @@
-"""Leitura e escrita de dados (padrão ``DataHandler`` das aulas)."""
-
 from __future__ import annotations
 
 import logging
@@ -16,8 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class DataHandler:
-    """Responsável por carregar pedidos, pagamentos e gravar Parquet."""
-
     def __init__(self, spark: SparkSession) -> None:
         self.spark = spark
 
@@ -34,7 +30,6 @@ class DataHandler:
         header: bool,
         sep: str,
     ) -> DataFrame:
-        """Carrega CSV gzip de pedidos com schema explícito e modo FAILFAST."""
         try:
             schema = self._get_schema_pedidos()
             df = (
@@ -59,7 +54,6 @@ class DataHandler:
             raise
 
     def load_pagamentos(self, path: str) -> DataFrame:
-        """Carrega JSON gzip de pagamentos com schema explícito."""
         try:
             schema = self._get_schema_pagamentos()
             df = (
@@ -87,7 +81,6 @@ class DataHandler:
         mode: str,
         compression: str = "snappy",
     ) -> None:
-        """Persiste o DataFrame em Parquet."""
         out = Path(path)
         out.parent.mkdir(parents=True, exist_ok=True)
         logger.info(
