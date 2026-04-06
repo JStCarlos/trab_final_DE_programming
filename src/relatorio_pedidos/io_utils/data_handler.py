@@ -8,7 +8,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType
 from pyspark.sql.utils import AnalysisException
 
-from relatorio_pedidos.io_utils.schemas import PAGAMENTOS_SCHEMA, PEDIDOS_SCHEMA
+from relatorio_pedidos.io_utils.schemas import PAGAMENTOS_SCHEMA, PEDIDOS_SCHEMA, RELATORIO_SCHEMA
 
 logger = logging.getLogger(__name__)
 
@@ -97,8 +97,11 @@ class DataHandler:
 
     def read_parquet(self, path: str) -> DataFrame:
         try:
-            df = self.spark.read.parquet(path)
-            logger.info("Leitura Parquet concluída: %s", path)
+            df = self.spark.read.schema(RELATORIO_SCHEMA).parquet(path)
+            logger.info(
+                "Leitura Parquet concluída (schema explícito RELATORIO_SCHEMA): %s",
+                path,
+            )
             return df
         except AnalysisException as exc:
             logger.error("Erro de leitura Spark (Parquet): %s", exc)
